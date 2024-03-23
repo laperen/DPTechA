@@ -10,9 +10,9 @@ namespace ShaunGoh {
 		private RaycastHit hit;
 
 		public FixedJoint holdpoint;
-		private Rigidbody targetrb;
-		private InteractableBase interactable;
+		private I_Interactable interactable;
 		private InteractableLink iLink;
+		private bool inInteraction;
 
 
 		private void Awake() {
@@ -22,59 +22,63 @@ namespace ShaunGoh {
 			if (ProjectUtils.inMenu) { return; }
 
 			if (Input.GetButtonDown("Fire1")) {
-				DoInteraction();
+				if (inInteraction) {
+					StopInteraction();
+				} else {
+					DoInteraction();
+				}
 			}
-			if (Input.GetButtonUp("Fire1")) {
-				StopInteraction();
+			if(inInteraction && Input.GetButtonDown("Freeze")) { 
+				FreezeInteracted();
 			}
 			if (Input.GetButtonDown("Fire2")) {
-				ProjectUtils.HideCursor();
+				ProjectUtils.SetPlayState(PlayerState.RotateObject);
 			}
 			if (Input.GetButtonUp("Fire2")) {
-				ProjectUtils.ShowCursor();
+				ProjectUtils.RevertPlayState();
 			}
+			if (null != interactable) {
+				interactable.ConstantInteraction(this);
+			}
+			/*
+			if (Input.GetButton("Fire2")) {
+				Ray mray = cam.ScreenPointToRay(Input.mousePosition);
+				Debug.DrawRay(mray.origin, mray.direction * 10, Color.yellow);
+			}
+			*/
 		}
 		private void DoInteraction() {
 			Ray pointRay = cam.ScreenPointToRay(Input.mousePosition);
 			if (!Physics.Raycast(pointRay, out hit, raydist, rayMask)) { return; }
+			holdpoint.transform.localRotation = Quaternion.identity;
 			Transform directTarget = hit.collider.transform;
 			iLink = directTarget.GetComponent<InteractableLink>();
-			interactable = directTarget.GetComponent<InteractableBase>();
-			if (interactable) {
-				targetrb = interactable.rb;
-			} else if (iLink) {
+			interactable = directTarget.GetComponent<I_Interactable>();
+			if (iLink) {
 				interactable = iLink.interactable;
-				targetrb = interactable.rb;
 			} else {
 				Transform target = hit.transform;
-				interactable = target.GetComponent<InteractableBase>();
-				if (interactable) {
-					targetrb = interactable.rb;
-				}
+				interactable = target.GetComponent<I_Interactable>();
 			}
-			if (!interactable) { return; }
-			switch (interactable.interactableType) {
+			if (null == interactable) { return; }
+			interactable.StartInteraction(this);
+			switch (interactable.Itype) {
 				case InteractableType.Pickable:
-					interactable.InteractStart();
-					holdpoint.transform.position = targetrb.position;
-					holdpoint.connectedBody = targetrb;
+					inInteraction = true;
 					break;
 				default:
 					break;
 			}
 		}
 		private void StopInteraction() {
-			if (!interactable) { return; }
-			switch (interactable.interactableType) {
-				case InteractableType.Pickable:
-					if (holdpoint && holdpoint.connectedBody) {
-						holdpoint.connectedBody = null;
-					}
-					interactable.InteractStop();
-					break;
-				default:
-					break;
-			}
+			if (null == interactable) { return; }
+			interactable.StopInteraction(this);
+			inInteraction = false;
+		}
+		private void FreezeInteracted() {
+			if (null == interactable) { return; }
+			interactable.FreezeInteraction(this);
+			inInteraction = false;
 		}
 	}
 }

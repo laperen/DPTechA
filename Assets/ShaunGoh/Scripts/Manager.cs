@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,6 +14,8 @@ namespace ShaunGoh {
 			}
 			ProjectUtils.inMenu = false;
 			instance = this;
+		}
+		private void Start() {
 			ProjectUtils.HideCursor();
 		}
 	}

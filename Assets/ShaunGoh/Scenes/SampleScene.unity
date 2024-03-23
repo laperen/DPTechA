@@ -303,7 +303,7 @@ MonoBehaviour:
   rayMask:
     serializedVersion: 2
     m_Bits: 1
-  raydist: 3
+  raydist: 10
   holdpoint: {fileID: 732789296}
 --- !u!1 &436771866
 GameObject:
