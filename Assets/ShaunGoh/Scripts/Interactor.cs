@@ -8,6 +8,9 @@ namespace ShaunGoh {
 		private Camera cam;
 		public LayerMask rayMask;
 		public int raydist;
+		public GameObject downIndicatorObj;
+		[HideInInspector]
+		public DownIndicator downIndicator;
 		private RaycastHit hit;
 
 		public FixedJoint holdpoint;
@@ -18,6 +21,7 @@ namespace ShaunGoh {
 
 		private void Awake() {
 			cam = Camera.main;
+			downIndicator = downIndicatorObj.GetComponent<DownIndicator>();
 		}
 		private void Update() {
 			if (ProjectUtils.inMenu) { return; }
@@ -74,11 +78,13 @@ namespace ShaunGoh {
 		private void StopInteraction() {
 			if (null == interactable) { return; }
 			interactable.StopInteraction(this);
+			interactable = null;
 			inInteraction = false;
 		}
 		private void FreezeInteracted() {
 			if (null == interactable) { return; }
 			interactable.FreezeInteraction(this);
+			interactable = null;
 			inInteraction = false;
 		}
 	}

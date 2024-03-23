@@ -10,8 +10,7 @@ namespace ShaunGoh {
 	public class ProjectUtils {
 		public static bool inMenu;
 		private static PlayerState prevPlayState;
-		public static float pickupRotateSpeed = 0.2f;
-		public static float pickupZoomSpeed = 1;
+		public static float pickupRotateSpeed, pickupZoomScale;
 		public static PlayerState playState { get; private set; }
 
 		public static void HideCursor() {
@@ -32,9 +31,9 @@ namespace ShaunGoh {
 	}
 	public interface I_Interactable {
 		InteractableType Itype { get; set; }
-		void StartInteraction(Interactor interactor);
-		void StopInteraction(Interactor interactor);
-		void ConstantInteraction(Interactor interactor);
-		void FreezeInteraction(Interactor interactor);
+		void StartInteraction(Interactor interactor);//on mouse click
+		void StopInteraction(Interactor interactor);//on mouse click while this object is in a running interaction
+		void ConstantInteraction(Interactor interactor);//on update, controls are placed within interactable
+		void FreezeInteraction(Interactor interactor);//on key F
 	}
 }

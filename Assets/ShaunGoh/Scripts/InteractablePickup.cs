@@ -12,33 +12,38 @@ namespace ShaunGoh {
 		public UnityEvent OnInteractStart, OnInteractStop;
 		private bool rotating;
 
-		public void StartInteraction(Interactor interactor) {
+		public virtual void StartInteraction(Interactor interactor) {
 			rb.isKinematic = false;
 			interactor.holdpoint.transform.position = rb.position;
 			interactor.holdpoint.connectedBody = rb;
+			interactor.downIndicatorObj.SetActive(true);
 			OnInteractStart.Invoke();
 		}
-		public void StopInteraction(Interactor interactor) {
+		public virtual void StopInteraction(Interactor interactor) {
 			interactor.holdpoint.connectedBody = null;
+			interactor.downIndicatorObj.SetActive(false);
 			rb.AddForce(Vector3.up);
 		}
-		public void FreezeInteraction(Interactor interactor) {
+		public virtual void FreezeInteraction(Interactor interactor) {
 			rb.isKinematic=true;
 			interactor.holdpoint.connectedBody = null;
 		}
-		public void ConstantInteraction(Interactor interactor) {
+		public virtual void ConstantInteraction(Interactor interactor) {
+			interactor.downIndicator.DrawFromPos(transform.position);
 			float scroll = Input.GetAxis("Mouse ScrollWheel");
 			if (scroll != 0) {
 				float holdist = interactor.holdpoint.transform.localPosition.magnitude;
 				Vector3 holdir = interactor.holdpoint.transform.localPosition.normalized;
-				holdist *= 1 + (scroll * ProjectUtils.pickupZoomSpeed);
+				holdist *= 1 + (scroll * ProjectUtils.pickupZoomScale);
 				interactor.holdpoint.transform.localPosition = holdir * holdist;
 			}
 			switch (ProjectUtils.playState) {
 				case PlayerState.RotateObject:
+				case PlayerState.Focused:
 					float hori = Input.GetAxisRaw("Horizontal");
 					float vert = Input.GetAxisRaw("Vertical");
-					if (hori == 0 && vert == 0) {
+					float roll = Input.GetAxisRaw("Roll");
+					if (hori == 0 && vert == 0 && roll == 0) {
 						if (rotating) {
 							interactor.holdpoint.connectedBody = null;
 							interactor.holdpoint.transform.localRotation = Quaternion.identity;
@@ -49,6 +54,7 @@ namespace ShaunGoh {
 					}
 					interactor.holdpoint.transform.Rotate(Vector3.up, -hori * ProjectUtils.pickupRotateSpeed);
 					interactor.holdpoint.transform.Rotate(Vector3.right, vert * ProjectUtils.pickupRotateSpeed);
+					interactor.holdpoint.transform.Rotate(Vector3.forward, roll * ProjectUtils.pickupRotateSpeed);
 					rotating = true;
 					break;
 				default: break;
