@@ -11,6 +11,7 @@ namespace ShaunGoh {
 		public static bool inMenu;
 		private static PlayerState prevPlayState;
 		public static float pickupRotateSpeed = 0.2f;
+		public static float pickupZoomSpeed = 1;
 		public static PlayerState playState { get; private set; }
 
 		public static void HideCursor() {

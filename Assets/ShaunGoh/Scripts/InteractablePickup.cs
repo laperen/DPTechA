@@ -27,6 +27,13 @@ namespace ShaunGoh {
 			interactor.holdpoint.connectedBody = null;
 		}
 		public void ConstantInteraction(Interactor interactor) {
+			float scroll = Input.GetAxis("Mouse ScrollWheel");
+			if (scroll != 0) {
+				float holdist = interactor.holdpoint.transform.localPosition.magnitude;
+				Vector3 holdir = interactor.holdpoint.transform.localPosition.normalized;
+				holdist *= 1 + (scroll * ProjectUtils.pickupZoomSpeed);
+				interactor.holdpoint.transform.localPosition = holdir * holdist;
+			}
 			switch (ProjectUtils.playState) {
 				case PlayerState.RotateObject:
 					float hori = Input.GetAxisRaw("Horizontal");
@@ -34,7 +41,7 @@ namespace ShaunGoh {
 					if (hori == 0 && vert == 0) {
 						if (rotating) {
 							interactor.holdpoint.connectedBody = null;
-							interactor.holdpoint.transform.rotation = Quaternion.identity;
+							interactor.holdpoint.transform.localRotation = Quaternion.identity;
 							interactor.holdpoint.connectedBody = rb;
 							rotating = false;
 						}
