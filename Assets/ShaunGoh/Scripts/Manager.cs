@@ -6,6 +6,7 @@ using UnityEngine;
 namespace ShaunGoh {
 	public class Manager : MonoBehaviour {
 		public static Manager instance;
+		public float rotateSpeed = 0.2f, pickupZoom = 1;
 
 		private void Awake() {
 			if(null != instance ) {
@@ -14,8 +15,8 @@ namespace ShaunGoh {
 			}
 			ProjectUtils.inMenu = false;
 			ProjectUtils.SetPlayState(PlayerState.Character);
-			ProjectUtils.pickupRotateSpeed = 0.2f;
-			ProjectUtils.pickupZoomScale = 1;
+			ProjectUtils.pickupRotateSpeed = rotateSpeed;
+			ProjectUtils.pickupZoomScale = pickupZoom;
 			instance = this;
 		}
 		private void Start() {
