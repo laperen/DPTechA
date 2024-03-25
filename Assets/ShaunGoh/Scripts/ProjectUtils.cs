@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 
 namespace ShaunGoh {
-	public enum InteractableType { None, Pickable, Pushable, Immobile, Tool, Panel }
+	public enum InteractableType { None, Pickable, Pushable, Immobile, Tool, Panel, Button }
 	public enum PlayerState { Character, RotateObject, Focused }
 
 	public class ProjectUtils {
@@ -10,6 +10,7 @@ namespace ShaunGoh {
 		private static PlayerState prevPlayState;
 		public static float pickupRotateSpeed, pickupZoomScale;
 		public static PlayerState playState { get; private set; }
+		private static PlayerMark player;
 
 		public static void HideCursor() {
 			Cursor.lockState = CursorLockMode.Locked;
@@ -25,6 +26,17 @@ namespace ShaunGoh {
 		}
 		public static void RevertPlayState() { 
 			playState = prevPlayState;
+		}
+		public static PlayerMark GetPlayerMark(bool retest = false) {
+			if (!retest && player) { return player; }
+			PlayerMark[] marks = GameObject.FindObjectsOfType<PlayerMark>();
+			for (int i = 0, max = marks.Length; i < max; i++) {
+				if (marks[i].gameObject.activeInHierarchy) {
+					player = marks[i];
+					return player;
+				}
+			}
+			return null;
 		}
 	}
 	public interface I_Interactable {

@@ -13,7 +13,7 @@ namespace ShaunGoh {
 		public event Action OnStartInteract, OnStopInteract;
 		private bool rotating;
 
-		public virtual void StartInteraction(Interactor interactor) {
+		public void StartInteraction(Interactor interactor) {
 			rb.isKinematic = false;
 			if (!interactor) { return; }
 			interactor.holdpoint.transform.position = rb.position;
@@ -30,15 +30,15 @@ namespace ShaunGoh {
 			OnStopInteract?.Invoke();
 			OnInteractStop.Invoke();
 		}
-		public virtual void StopInteraction(Interactor interactor) {
+		public void StopInteraction(Interactor interactor) {
 			StopCommon(interactor);
 			rb.AddForce(Vector3.up);
 		}
-		public virtual void FreezeInteraction(Interactor interactor) {
+		public void FreezeInteraction(Interactor interactor) {
 			rb.isKinematic=true;
 			StopCommon(interactor);
 		}
-		public virtual void ConstantInteraction(Interactor interactor) {
+		public void ConstantInteraction(Interactor interactor) {
 			interactor.downIndicator.DrawFromPos(transform.position);
 			float scroll = Input.GetAxis("Mouse ScrollWheel");
 			if (scroll != 0) {

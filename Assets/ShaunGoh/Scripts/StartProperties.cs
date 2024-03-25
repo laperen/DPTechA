@@ -1,8 +1,8 @@
 using UnityEngine;
 
 namespace ShaunGoh {
-	public class Manager : MonoBehaviour {
-		public static Manager instance;
+	public class StartProperties : MonoBehaviour {
+		public static StartProperties instance;
 		public float rotateSpeed = 0.2f, pickupZoom = 1;
 
 		private void Awake() {

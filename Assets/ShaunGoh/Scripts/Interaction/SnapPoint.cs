@@ -6,7 +6,7 @@ using UnityEngine.Events;
 namespace ShaunGoh {
 	public class SnapPoint : MonoBehaviour {
 		public List<string> snapTags;
-		public float transitionDuration = 0.5f;
+		public float transitionDuration = 0.2f;
 		public Transform targetPoint;
 		public List<SnapPoint> dependencies;
 		private List<SnapPoint> dependents;
@@ -41,6 +41,7 @@ namespace ShaunGoh {
 				SnapPoint point = points[i];
 				float dist = point.CheckDist(itrans);
 				if (dist < closestDist) { 
+					closestDist = dist;
 					closestPoint = point;
 				}
 			}
@@ -62,7 +63,7 @@ namespace ShaunGoh {
 			}
 			return fulfilled == dependencies.Count;
 		}
-		private float CheckDist(Transform target) { 
+		private float CheckDist(Transform target) {
 			return Vector3.SqrMagnitude(transform.position - target.position);
 		}
 		private void SnapInteractable(I_Interactable interactable, Transform targetTrans) {
@@ -88,10 +89,12 @@ namespace ShaunGoh {
 		private IEnumerator WaitSnap(Transform target) {
 			//playingTransition = true;
 			float curr = 0;
+			Vector3 startpos = target.position;
+			Quaternion startrot = target.rotation;
 			while (curr < 1) {
 				curr = transitionDuration <= 0 ? 1 : Mathf.MoveTowards(curr, 1, Time.deltaTime / transitionDuration);
-				target.position = Vector3.Lerp(target.position, targetPoint.position, curr);
-				target.rotation = Quaternion.Lerp(target.rotation, targetPoint.rotation, curr);
+				target.position = Vector3.Lerp(startpos, targetPoint.position, curr);
+				target.rotation = Quaternion.Lerp(startrot, targetPoint.rotation, curr);
 				yield return null;
 			}
 			//playingTransition = false;
@@ -103,7 +106,6 @@ namespace ShaunGoh {
 			if (!targetPoint) { targetPoint = transform; }
 		}
 		private void FixedUpdate() {
-			if (null != heldObject) { return; }
 			if (collidedObjects.Count > 0) {
 				if (null == triggeredPoints) {
 					triggeredPoints = new();

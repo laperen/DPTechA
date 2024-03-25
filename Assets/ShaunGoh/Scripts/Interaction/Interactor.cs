@@ -31,14 +31,22 @@ namespace ShaunGoh {
 					DoInteraction();
 				}
 			}
-			if(inInteraction && Input.GetButtonDown("Freeze")) { 
-				FreezeInteracted();
-			}
-			if (Input.GetButtonDown("Fire2")) {
-				ProjectUtils.SetPlayState(PlayerState.RotateObject);
-			}
-			if (Input.GetButtonUp("Fire2")) {
-				ProjectUtils.RevertPlayState();
+			if (inInteraction) {
+				if (Input.GetButtonDown("Freeze")) {
+					FreezeInteracted();
+				}
+				switch (ProjectUtils.playState) {
+					case PlayerState.Character:
+						if (Input.GetButtonDown("Fire2")) {
+							ProjectUtils.SetPlayState(PlayerState.RotateObject);
+						}
+						break;
+					case PlayerState.RotateObject:
+						if (Input.GetButtonUp("Fire2")) {
+							ProjectUtils.RevertPlayState();
+						}
+						break;
+				}
 			}
 			if (null != interactable) {
 				interactable.ConstantInteraction(this);
@@ -54,8 +62,9 @@ namespace ShaunGoh {
 			if (iLink) {
 				interactable = iLink.interactable;
 			} else {
-				Transform target = hit.transform;
-				interactable = target.GetComponent<I_Interactable>();
+				if (null == interactable) {
+					interactable = directTarget.GetComponentInParent<I_Interactable>();
+				}
 			}
 			if (null == interactable) { return; }
 			interactable.StartInteraction(this);
@@ -67,17 +76,24 @@ namespace ShaunGoh {
 					break;
 			}
 		}
+		private void CommonStopInteraction() {
+			interactable = null;
+			inInteraction = false;
+			switch (ProjectUtils.playState) {
+				case PlayerState.RotateObject:
+					ProjectUtils.RevertPlayState();
+					break;
+			}
+		}
 		private void StopInteraction() {
 			if (null == interactable) { return; }
 			interactable.StopInteraction(this);
-			interactable = null;
-			inInteraction = false;
+			CommonStopInteraction();
 		}
 		private void FreezeInteracted() {
 			if (null == interactable) { return; }
 			interactable.FreezeInteraction(this);
-			interactable = null;
-			inInteraction = false;
+			CommonStopInteraction();
 		}
 	}
 }

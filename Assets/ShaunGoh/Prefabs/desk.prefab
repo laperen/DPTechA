@@ -9,6 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3292540190980774938}
+  - component: {fileID: 6461417002422787919}
+  - component: {fileID: 6351886921440192959}
   m_Layer: 0
   m_Name: desk
   m_TagString: Untagged
@@ -31,8 +33,50 @@ Transform:
   m_Children:
   - {fileID: 3577615566488358118}
   - {fileID: 4569291550219970132}
+  - {fileID: 5107377552486352729}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6461417002422787919
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1212911679725853135}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 50ef2aefd42db0d4cbac18faaed41e2d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerPoint: {fileID: 5107377552486352729}
+--- !u!114 &6351886921440192959
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1212911679725853135}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c58c692f2fb54a49884f76508ac872d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  snapTag: 
+  OnInteractStart:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 6461417002422787919}
+        m_TargetAssemblyTypeName: ShaunGoh.FocusPoint, Assembly-CSharp
+        m_MethodName: ToggleFocus
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &2322497560860556776
 GameObject:
   m_ObjectHideFlags: 0
@@ -86,6 +130,37 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.5150691, y: 1.0123903, z: 0.43075645}
   m_Center: {x: -0.00051677227, y: 0.0013280212, z: 0.2148315}
+--- !u!1 &6289426858067304440
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5107377552486352729}
+  m_Layer: 0
+  m_Name: playerPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5107377552486352729
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6289426858067304440}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.055393707, y: 0.7049337, z: -0.055393714, w: -0.7049337}
+  m_LocalPosition: {x: 0.26, y: 0.584, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3292540190980774938}
+  m_LocalEulerAnglesHint: {x: 8.986, y: 270, z: 0}
 --- !u!1001 &3903643524537461517
 PrefabInstance:
   m_ObjectHideFlags: 0
