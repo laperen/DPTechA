@@ -1,32 +1,42 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+using System;
 using UnityEngine;
 using UnityEngine.Events;
-using static UnityEngine.GraphicsBuffer;
 
 namespace ShaunGoh {
 	public class InteractablePickup : MonoBehaviour, I_Interactable {
 		public Rigidbody rb;
-		public InteractableType Itype{ get { return InteractableType.Pickable; } set { } }
+		public float minZoomDist;
+		public InteractableType Itype{ get { return InteractableType.Pickable; } }
+		public string snapTag;
+		public string SnapTag { get { return snapTag; } }
 		public UnityEvent OnInteractStart, OnInteractStop;
+		public event Action OnStartInteract, OnStopInteract;
 		private bool rotating;
 
 		public virtual void StartInteraction(Interactor interactor) {
 			rb.isKinematic = false;
+			if (!interactor) { return; }
 			interactor.holdpoint.transform.position = rb.position;
 			interactor.holdpoint.connectedBody = rb;
 			interactor.downIndicatorObj.SetActive(true);
+			OnStartInteract?.Invoke();
 			OnInteractStart.Invoke();
 		}
-		public virtual void StopInteraction(Interactor interactor) {
-			interactor.holdpoint.connectedBody = null;
+		private void StopCommon(Interactor interactor) {
+			if (!interactor) { return; }
 			interactor.downIndicatorObj.SetActive(false);
+			interactor.holdpoint.connectedBody = null;
+			SnapPoint.CheckTriggeredPoints(this);
+			OnStopInteract?.Invoke();
+			OnInteractStop.Invoke();
+		}
+		public virtual void StopInteraction(Interactor interactor) {
+			StopCommon(interactor);
 			rb.AddForce(Vector3.up);
 		}
 		public virtual void FreezeInteraction(Interactor interactor) {
 			rb.isKinematic=true;
-			interactor.holdpoint.connectedBody = null;
+			StopCommon(interactor);
 		}
 		public virtual void ConstantInteraction(Interactor interactor) {
 			interactor.downIndicator.DrawFromPos(transform.position);
@@ -35,6 +45,7 @@ namespace ShaunGoh {
 				float holdist = interactor.holdpoint.transform.localPosition.magnitude;
 				Vector3 holdir = interactor.holdpoint.transform.localPosition.normalized;
 				holdist *= 1 + (scroll * ProjectUtils.pickupZoomScale);
+				holdist = holdist > minZoomDist ? holdist : minZoomDist;
 				interactor.holdpoint.transform.localPosition = holdir * holdist;
 			}
 			switch (ProjectUtils.playState) {

@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.XR;
 
 namespace ShaunGoh {
 	public class Interactor : MonoBehaviour {
@@ -17,6 +14,7 @@ namespace ShaunGoh {
 		private I_Interactable interactable;
 		private InteractableLink iLink;
 		private bool inInteraction;
+		public bool occupied { get { return inInteraction; } }
 
 
 		private void Awake() {
@@ -45,12 +43,6 @@ namespace ShaunGoh {
 			if (null != interactable) {
 				interactable.ConstantInteraction(this);
 			}
-			/*
-			if (Input.GetButton("Fire2")) {
-				Ray mray = cam.ScreenPointToRay(Input.mousePosition);
-				Debug.DrawRay(mray.origin, mray.direction * 10, Color.yellow);
-			}
-			*/
 		}
 		private void DoInteraction() {
 			Ray pointRay = cam.ScreenPointToRay(Input.mousePosition);

@@ -1,7 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace ShaunGoh {
 	public enum InteractableType { None, Pickable, Pushable, Immobile, Tool, Panel }
@@ -30,7 +28,10 @@ namespace ShaunGoh {
 		}
 	}
 	public interface I_Interactable {
-		InteractableType Itype { get; set; }
+		InteractableType Itype { get; }
+		string SnapTag { get; }
+		event Action OnStartInteract;
+		event Action OnStopInteract;
 		void StartInteraction(Interactor interactor);//on mouse click
 		void StopInteraction(Interactor interactor);//on mouse click while this object is in a running interaction
 		void ConstantInteraction(Interactor interactor);//on update, controls are placed within interactable
