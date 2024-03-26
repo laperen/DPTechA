@@ -63,9 +63,10 @@ namespace ShaunGoh {
 						}
 						break;
 					}
-					interactor.holdpoint.transform.Rotate(Vector3.up, -hori * ProjectUtils.pickupRotateSpeed);
-					interactor.holdpoint.transform.Rotate(Vector3.right, vert * ProjectUtils.pickupRotateSpeed);
-					interactor.holdpoint.transform.Rotate(Vector3.forward, roll * ProjectUtils.pickupRotateSpeed);
+					float timepassed = Time.deltaTime;
+					interactor.holdpoint.transform.Rotate(Vector3.up, -hori * timepassed * ProjectUtils.pickupRotateSpeed);
+					interactor.holdpoint.transform.Rotate(Vector3.right, vert * timepassed * ProjectUtils.pickupRotateSpeed);
+					interactor.holdpoint.transform.Rotate(Vector3.forward, roll * timepassed * ProjectUtils.pickupRotateSpeed);
 					rotating = true;
 					break;
 				default: break;

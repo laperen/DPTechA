@@ -3,12 +3,25 @@ using UnityEngine;
 
 namespace ShaunGoh {
 	public class ScoreTimer : MonoBehaviour {
-		public StringEvent ReflectTime;
+		public float startingRecord;
+		public Color maintinedRecordColor, newRecordColor;
+		public StringEvent ReflectTime, ReflectRecord;
+		public ColorEvent ReflectNewRecord;
 		public BoolEvent ResetState;
 		private float timePassed;
 		private int maxScore, currentScore;
 		private bool started;
 		private bool complete;
+		private void Awake() {
+			if (startingRecord <= 0) { 
+				startingRecord = Mathf.Infinity;
+				ReflectRecord.Invoke("N/A");
+				ReflectNewRecord.Invoke(maintinedRecordColor);
+			} else {
+				ReflectRecord.Invoke(SecondsToTime(startingRecord));
+				ReflectNewRecord.Invoke(newRecordColor);
+			}
+		}
 		public void SetMax(int max) { 
 			maxScore = max;
 		}
@@ -17,6 +30,13 @@ namespace ShaunGoh {
 			currentScore = current;
 			if(currentScore >= maxScore) {
 				complete = true;
+				if (timePassed < startingRecord) {
+					startingRecord = timePassed;
+					ReflectRecord.Invoke(SecondsToTime(startingRecord));
+					ReflectNewRecord.Invoke(newRecordColor);
+				} else {
+					ReflectNewRecord.Invoke(maintinedRecordColor);
+				}
 			}
 		}
 		private void Update() {

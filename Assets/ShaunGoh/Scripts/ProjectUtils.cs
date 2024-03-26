@@ -12,10 +12,15 @@ namespace ShaunGoh {
 	public class IntEvent: UnityEvent<int> { }
 	[Serializable]
 	public class StringEvent : UnityEvent<string> { }
+	[Serializable]
+	public class ColorEvent : UnityEvent<Color> { }
 	public class ProjectUtils {
 		public static bool inMenu;
 		private static PlayerState prevPlayState;
 		public static float pickupRotateSpeed, pickupZoomScale;
+		public static float playerMovespeed;
+		public static float playerRunspeed;
+		public static float camTurnspeed;
 		public static PlayerState playState { get; private set; }
 		private static PlayerMark player;
 
