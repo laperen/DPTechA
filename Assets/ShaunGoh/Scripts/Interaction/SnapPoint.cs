@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,6 +16,7 @@ namespace ShaunGoh {
 		private List<Collider> collidedObjects;
 		private static List<SnapPoint> triggeredPoints;
 		private I_Interactable heldObject;
+		public event Action Snapped, Unsnapped;
 		//private bool playingTransition;
 		public static void CheckTriggeredPoints(I_Interactable interactable) {
 			if (null == triggeredPoints) { return; }
@@ -71,6 +73,7 @@ namespace ShaunGoh {
 			heldObject = interactable;
 			interactable.FreezeInteraction(null);
 			interactable.OnStartInteract += InteractionStarted;
+			Snapped?.Invoke();
 			StartCoroutine(WaitSnap(targetTrans));
 		}
 		private void InteractionStarted() {
@@ -78,6 +81,7 @@ namespace ShaunGoh {
 			heldObject.OnStartInteract -= InteractionStarted;
 			heldObject.StartInteraction(null);
 			heldObject = null;
+			Unsnapped?.Invoke();
 			int dcount = dependents.Count;
 			if (dcount > 0) {
 				for (int i = 0; i < dcount; i++) { 
@@ -85,6 +89,9 @@ namespace ShaunGoh {
 					dependent.InteractionStarted();
 				}
 			}
+		}
+		public void ResetSnap() {
+			InteractionStarted();
 		}
 		private IEnumerator WaitSnap(Transform target) {
 			//playingTransition = true;

@@ -16,7 +16,6 @@ namespace ShaunGoh {
 			Movement();
 		}
 		private void Movement() {
-			if(ProjectUtils.playState != PlayerState.Character) { return; }
 			bool haltstate = ProjectUtils.playState != PlayerState.Character;
 			float hori = haltstate ? 0 : Input.GetAxisRaw("Horizontal");
 			float vert = haltstate ? 0 : Input.GetAxisRaw("Vertical");

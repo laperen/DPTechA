@@ -1,10 +1,17 @@
 using System;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace ShaunGoh {
 	public enum InteractableType { None, Pickable, Pushable, Immobile, Tool, Panel, Button }
 	public enum PlayerState { Character, RotateObject, Focused }
+	[Serializable]
+	public class BoolEvent : UnityEvent<bool> { }
 
+	[Serializable]
+	public class IntEvent: UnityEvent<int> { }
+	[Serializable]
+	public class StringEvent : UnityEvent<string> { }
 	public class ProjectUtils {
 		public static bool inMenu;
 		private static PlayerState prevPlayState;

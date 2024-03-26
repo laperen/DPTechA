@@ -70,6 +70,15 @@ namespace ShaunGoh {
 					break;
 				default: break;
 			}
+			/*
+			switch (ProjectUtils.playState) {
+				case PlayerState.Focused:
+					float vert = Input.GetAxisRaw("Vertical");
+					Vector3 holdir = interactor.holdpoint.transform.localPosition.normalized;
+					break;
+				default: break;
+			}
+			*/
 		}
 	}
 }
