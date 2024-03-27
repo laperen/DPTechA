@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -16,12 +17,14 @@ namespace ShaunGoh {
 	public class ColorEvent : UnityEvent<Color> { }
 	public class ProjectUtils {
 		public static bool inMenu;
-		private static PlayerState prevPlayState;
+		private static List<PlayerState> prevPlayStates;
 		public static float pickupRotateSpeed, pickupZoomScale;
 		public static float playerMovespeed;
 		public static float playerRunspeed;
 		public static float camTurnspeed;
+		public static event Action playStateChanged;
 		public static PlayerState playState { get; private set; }
+		public static bool grabState { get; private set; }
 		private static PlayerMark player;
 
 		public static void HideCursor() {
@@ -33,11 +36,20 @@ namespace ShaunGoh {
 			Cursor.visible = true;
 		}
 		public static void SetPlayState(PlayerState newstate) {
-			prevPlayState = playState;
+			if (null == prevPlayStates) { prevPlayStates = new(); }
+			prevPlayStates.Add(newstate);
 			playState = newstate;
+			playStateChanged?.Invoke();
 		}
 		public static void RevertPlayState() { 
-			playState = prevPlayState;
+			int index = prevPlayStates.Count - 1;
+			prevPlayStates.RemoveAt(index);
+			playState = prevPlayStates[index - 1];
+			playStateChanged?.Invoke();
+		}
+		public static void SetGrabState(bool state) {
+			grabState = state;
+			playStateChanged?.Invoke();
 		}
 		public static PlayerMark GetPlayerMark(bool retest = false) {
 			if (!retest && player) { return player; }

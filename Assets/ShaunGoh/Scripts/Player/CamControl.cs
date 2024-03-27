@@ -4,7 +4,6 @@ namespace ShaunGoh {
 	public class CamControl : MonoBehaviour {
 		public Transform trans;
 		public Transform vert;
-
 		private void Update() {
 			if (ProjectUtils.inMenu) { return; }
 			Rotation();

@@ -131,6 +131,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rb: {fileID: 6737149400709370350}
   minZoomDist: 0.4
+  snapTag: 
   OnInteractStart:
     m_PersistentCalls:
       m_Calls: []

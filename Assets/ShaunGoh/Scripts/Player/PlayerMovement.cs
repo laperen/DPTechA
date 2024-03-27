@@ -14,7 +14,14 @@ namespace ShaunGoh {
 			Movement();
 		}
 		private void Movement() {
-			bool haltstate = ProjectUtils.playState != PlayerState.Character;
+			bool haltstate = true;
+			switch (ProjectUtils.playState) {
+				case PlayerState.Character:
+					haltstate = false;
+					break;
+				default:
+					break;
+			}
 			float hori = haltstate ? 0 : Input.GetAxisRaw("Horizontal");
 			float vert = haltstate ? 0 : Input.GetAxisRaw("Vertical");
 			Vector3 movedir = new Vector3(hori, 0, vert);

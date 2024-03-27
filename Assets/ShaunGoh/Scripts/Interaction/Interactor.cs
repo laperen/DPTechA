@@ -70,6 +70,7 @@ namespace ShaunGoh {
 			interactable.StartInteraction(this);
 			switch (interactable.Itype) {
 				case InteractableType.Pickable:
+					ProjectUtils.SetGrabState(true);
 					inInteraction = true;
 					break;
 				default:
@@ -77,6 +78,13 @@ namespace ShaunGoh {
 			}
 		}
 		private void CommonStopInteraction() {
+			switch (interactable.Itype) {
+				case InteractableType.Pickable:
+					ProjectUtils.SetGrabState(false);
+					break;
+				default:
+					break;
+			}
 			interactable = null;
 			inInteraction = false;
 			switch (ProjectUtils.playState) {
