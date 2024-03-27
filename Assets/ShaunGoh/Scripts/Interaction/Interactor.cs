@@ -5,12 +5,9 @@ namespace ShaunGoh {
 		private Camera cam;
 		public LayerMask rayMask;
 		public int raydist;
-		public GameObject downIndicatorObj;
-		[HideInInspector]
-		public DownIndicator downIndicator;
 		private RaycastHit hit;
 
-		public FixedJoint holdpoint;
+		public Transform holdpoint;
 		private I_Interactable interactable;
 		private InteractableLink iLink;
 		private bool inInteraction;
@@ -19,7 +16,6 @@ namespace ShaunGoh {
 
 		private void Awake() {
 			cam = Camera.main;
-			downIndicator = downIndicatorObj.GetComponent<DownIndicator>();
 		}
 		private void Update() {
 			if (ProjectUtils.inMenu) { return; }
@@ -52,10 +48,14 @@ namespace ShaunGoh {
 				interactable.ConstantInteraction(this);
 			}
 		}
-		private void DoInteraction() {
+		public RaycastHit? CastRay(){
 			Ray pointRay = cam.ScreenPointToRay(Input.mousePosition);
-			if (!Physics.Raycast(pointRay, out hit, raydist, rayMask)) { return; }
-			holdpoint.transform.localRotation = Quaternion.identity;
+			if (!Physics.Raycast(pointRay, out hit, raydist, rayMask)) { return null; }
+			return hit;
+		}
+		private void DoInteraction() {
+			if (null == CastRay()) { return; }
+			holdpoint.localRotation = Quaternion.identity;
 			Transform directTarget = hit.collider.transform;
 			iLink = directTarget.GetComponent<InteractableLink>();
 			interactable = directTarget.GetComponent<I_Interactable>();

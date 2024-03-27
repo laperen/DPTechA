@@ -11,7 +11,7 @@ namespace ShaunGoh {
 		public Transform targetPoint;
 		public List<SnapPoint> dependencies;
 		private List<SnapPoint> dependents;
-		public UnityEvent SnapFinished;
+		//public UnityEvent SnapFinished;
 
 		private List<Collider> collidedObjects;
 		private static List<SnapPoint> triggeredPoints;
@@ -71,10 +71,10 @@ namespace ShaunGoh {
 		private void SnapInteractable(I_Interactable interactable, Transform targetTrans) {
 			if (null == interactable || null == targetTrans || null == snapTags || !snapTags.Contains(interactable.SnapTag)) { return; }
 			heldObject = interactable;
-			interactable.FreezeInteraction(null);
+			//interactable.FreezeInteraction(null);
 			interactable.OnStartInteract += InteractionStarted;
 			Snapped?.Invoke();
-			StartCoroutine(WaitSnap(targetTrans));
+			//StartCoroutine(WaitSnap(targetTrans));
 		}
 		private void InteractionStarted() {
 			if (null == heldObject) { return; }
@@ -93,6 +93,7 @@ namespace ShaunGoh {
 		public void ResetSnap() {
 			InteractionStarted();
 		}
+		/*
 		private IEnumerator WaitSnap(Transform target) {
 			//playingTransition = true;
 			float curr = 0;
@@ -105,8 +106,9 @@ namespace ShaunGoh {
 				yield return null;
 			}
 			//playingTransition = false;
-			SnapFinished.Invoke();
+			//SnapFinished.Invoke();
 		}
+		*/
 		private void Awake() {
 			collidedObjects = new();
 			dependents = new();
