@@ -6,6 +6,7 @@ using UnityEngine.Events;
 namespace ShaunGoh {
 	public enum InteractableType { None, Pickable, Pushable, Immobile, Tool, Panel, Button }
 	public enum PlayerState { Character, RotateObject, Focused }
+	public enum GrabState { None, Placement, Freehold }
 	[Serializable]
 	public class BoolEvent : UnityEvent<bool> { }
 
@@ -21,10 +22,11 @@ namespace ShaunGoh {
 		public static float pickupRotateSpeed, pickupZoomScale;
 		public static float playerMovespeed;
 		public static float playerRunspeed;
+		public static string mouseSensitivityPrefKey = "MouseSensitivity";
 		public static float camTurnspeed;
 		public static event Action playStateChanged;
 		public static PlayerState playState { get; private set; }
-		public static bool grabState { get; private set; }
+		public static GrabState grabState { get; private set; }
 		private static PlayerMark player;
 
 		public static void HideCursor() {
@@ -47,7 +49,7 @@ namespace ShaunGoh {
 			playState = prevPlayStates[index - 1];
 			playStateChanged?.Invoke();
 		}
-		public static void SetGrabState(bool state) {
+		public static void SetGrabState(GrabState state) {
 			grabState = state;
 			playStateChanged?.Invoke();
 		}

@@ -31,7 +31,6 @@ namespace ShaunGoh {
 			while (curr < 1) {
 				curr = transitionDuration <= 0 ? 1 : Mathf.MoveTowards(curr, 1, Time.deltaTime / transitionDuration);
 				transform.position = Vector3.Lerp(startpos, target.position, curr);
-				//transform.rotation = Quaternion.Lerp(transform.rotation, target.rotation, curr);
 				yield return null;
 			}
 			inTransition = false;

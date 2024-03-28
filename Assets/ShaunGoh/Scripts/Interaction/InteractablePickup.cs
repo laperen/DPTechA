@@ -17,7 +17,7 @@ namespace ShaunGoh {
 		private List<LayerMask> startingMasks;
 		private LayerMask ignoreMask;
 		private Transform originalParent;
-
+		private Vector3 cacheOffset;
 		private void Awake() {
 			ignoreMask = LayerMask.NameToLayer("Ignore Raycast");
 			originalParent = transform.parent;
@@ -40,6 +40,7 @@ namespace ShaunGoh {
 			}
 			interactor.holdpoint.rotation = interactor.transform.root.rotation;
 			transform.SetParent(interactor.holdpoint);
+			MaxBounds(colliders);
 			OnStartInteract?.Invoke();
 			OnInteractStart.Invoke();
 		}
@@ -67,6 +68,7 @@ namespace ShaunGoh {
 			foreach (Collider col in cols) {
 				b.Encapsulate(col.bounds);
 			}
+			cacheOffset = b.size / 2;
 			return b;
 		}
 		public void ConstantInteraction(Interactor interactor) {
@@ -88,9 +90,15 @@ namespace ShaunGoh {
 						break;
 					}
 					float timepassed = Time.deltaTime;
-					interactor.holdpoint.Rotate(Vector3.up, -hori * timepassed * ProjectUtils.pickupRotateSpeed);
-					interactor.holdpoint.Rotate(Vector3.right, vert * timepassed * ProjectUtils.pickupRotateSpeed);
-					interactor.holdpoint.Rotate(Vector3.forward, roll * timepassed * ProjectUtils.pickupRotateSpeed);
+					if (hori != 0) {
+						interactor.holdpoint.Rotate(Vector3.up, -hori * timepassed * ProjectUtils.pickupRotateSpeed);
+					}
+					if (vert != 0) {
+						interactor.holdpoint.Rotate(Vector3.right, vert * timepassed * ProjectUtils.pickupRotateSpeed);
+					}
+					if (roll != 0) {
+						interactor.holdpoint.Rotate(Vector3.forward, roll * timepassed * ProjectUtils.pickupRotateSpeed);
+					}
 					rotating = true;
 					break;
 				default: break;
@@ -100,11 +108,17 @@ namespace ShaunGoh {
 			}
 			RaycastHit? hit = interactor.CastRay();
 			if (null != hit) {
-				Bounds bounds = MaxBounds(colliders);
-				Vector3 temppos = hit.Value.point;
-				temppos.x += bounds.size.x / 2 * hit.Value.normal.x;
-				temppos.y += bounds.size.y / 2 * hit.Value.normal.y;
-				temppos.z += bounds.size.z / 2 * hit.Value.normal.z;
+				Vector3 p = hit.Value.point;
+				Vector3 n = hit.Value.normal;
+				interactor.hitmark.position = p;
+				interactor.hitmark.rotation = Quaternion.LookRotation(n);
+				if (rotating) {
+					MaxBounds(colliders);
+				}
+				Vector3 temppos = p;
+				temppos.x += cacheOffset.x * n.x;
+				temppos.y += cacheOffset.y * n.y;
+				temppos.z += cacheOffset.z * n.z;
 				interactor.holdpoint.position = temppos;
 				transform.position = temppos;
 			}

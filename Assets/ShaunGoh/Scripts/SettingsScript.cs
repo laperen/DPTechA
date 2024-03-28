@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,6 +10,7 @@ namespace ShaunGoh {
 		}
 		public void OnMouseSensitivityChange(float value) { 
 			ProjectUtils.camTurnspeed = value;
+			PlayerPrefs.SetFloat(ProjectUtils.mouseSensitivityPrefKey, value);
 		}
 	}
 }

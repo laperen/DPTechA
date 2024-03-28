@@ -25,7 +25,7 @@ namespace ShaunGoh {
 			ProjectUtils.pickupZoomScale = pickupZoom;
 			ProjectUtils.playerMovespeed = playerMovespeed;
 			ProjectUtils.playerRunspeed = playerRunspeed;
-			ProjectUtils.camTurnspeed = camTurnspeed;
+			ProjectUtils.camTurnspeed = PlayerPrefs.HasKey(ProjectUtils.mouseSensitivityPrefKey) ? PlayerPrefs.GetFloat(ProjectUtils.mouseSensitivityPrefKey) : camTurnspeed;
 			instance = this;
 		}
 		private void OnDestroy() {
@@ -51,17 +51,23 @@ namespace ShaunGoh {
 		private void OnPlayStateChange() {
 			switch (ProjectUtils.playState) {
 				case PlayerState.Character:
-					if (ProjectUtils.grabState) {
-						GameplayMenuSelector.ShowItem(2);
-					} else {
-						GameplayMenuSelector.ShowItem(0);
+					switch(ProjectUtils.grabState) {
+						case GrabState.Placement:
+							GameplayMenuSelector.ShowItem(2);
+							break;
+						default:
+							GameplayMenuSelector.ShowItem(0);
+							break;
 					}
 					break;
 				case PlayerState.Focused:
-					if (ProjectUtils.grabState) {
-						GameplayMenuSelector.ShowItem(3);
-					} else {
-						GameplayMenuSelector.ShowItem(1);
+					switch(ProjectUtils.grabState){
+						case GrabState.Placement:
+							GameplayMenuSelector.ShowItem(3);
+							break;
+						default:
+							GameplayMenuSelector.ShowItem(1);
+							break;
 					}
 					break;
 				case PlayerState.RotateObject:

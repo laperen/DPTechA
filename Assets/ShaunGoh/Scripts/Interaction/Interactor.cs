@@ -8,6 +8,7 @@ namespace ShaunGoh {
 		private RaycastHit hit;
 
 		public Transform holdpoint;
+		public Transform hitmark;
 		private I_Interactable interactable;
 		private InteractableLink iLink;
 		private bool inInteraction;
@@ -70,7 +71,8 @@ namespace ShaunGoh {
 			interactable.StartInteraction(this);
 			switch (interactable.Itype) {
 				case InteractableType.Pickable:
-					ProjectUtils.SetGrabState(true);
+					ProjectUtils.SetGrabState(GrabState.Placement);
+					hitmark.gameObject.SetActive(true);
 					inInteraction = true;
 					break;
 				default:
@@ -80,7 +82,8 @@ namespace ShaunGoh {
 		private void CommonStopInteraction() {
 			switch (interactable.Itype) {
 				case InteractableType.Pickable:
-					ProjectUtils.SetGrabState(false);
+					ProjectUtils.SetGrabState(GrabState.None);
+					hitmark.gameObject.SetActive(false);
 					break;
 				default:
 					break;
