@@ -53,6 +53,7 @@ namespace ShaunGoh {
 				case PlayerState.Character:
 					switch(ProjectUtils.grabState) {
 						case GrabState.Placement:
+						case GrabState.Freehold:
 							GameplayMenuSelector.ShowItem(2);
 							break;
 						default:
@@ -63,6 +64,7 @@ namespace ShaunGoh {
 				case PlayerState.Focused:
 					switch(ProjectUtils.grabState){
 						case GrabState.Placement:
+						case GrabState.Freehold:
 							GameplayMenuSelector.ShowItem(3);
 							break;
 						default:
