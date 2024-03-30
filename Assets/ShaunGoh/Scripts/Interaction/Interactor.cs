@@ -68,36 +68,20 @@ namespace ShaunGoh {
 				}
 			}
 			if (null == interactable) { return; }
+			interactable.StartInteraction(this);
 			switch (interactable.Itype) {
 				case InteractableType.Pickable:
-					ProjectUtils.SetGrabState(ProjectUtils.lastActiveGrabState == GrabState.None ? GrabState.Placement : ProjectUtils.lastActiveGrabState);
 					inInteraction = true;
 					break;
 				default:
-					break;
-			}
-			interactable.StartInteraction(this);
-		}
-		private void CommonStopInteraction() {
-			switch (interactable.Itype) {
-				case InteractableType.Pickable:
-					ProjectUtils.SetGrabState(GrabState.None);
-					break;
-				default:
-					break;
-			}
-			interactable = null;
-			inInteraction = false;
-			switch (ProjectUtils.playState) {
-				case PlayerState.RotateObject:
-					ProjectUtils.RevertPlayState();
 					break;
 			}
 		}
 		private void StopInteraction() {
 			if (null == interactable) { return; }
 			interactable.StopInteraction(this);
-			CommonStopInteraction();
+			interactable = null;
+			inInteraction = false;
 		}
 		private void SwitchInteracted() {
 			if (null == interactable) { return; }

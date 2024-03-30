@@ -39,6 +39,7 @@ namespace ShaunGoh {
 		}
 		public void StartInteraction(Interactor interactor) {
 			if (!interactor) { return; }
+			ProjectUtils.SetGrabState(ProjectUtils.lastActiveGrabState == GrabState.None ? GrabState.Placement : ProjectUtils.lastActiveGrabState);
 			interactor.holdpoint.transform.rotation = interactor.transform.root.rotation;
 			interactor.holdpoint.transform.position = rb.position;
 			interactor.holdpoint.connectedBody = rb;
@@ -55,18 +56,20 @@ namespace ShaunGoh {
 			OnStartInteract?.Invoke();
 			OnInteractStart.Invoke();
 		}
-		private bool StopCommon(Interactor interactor) {
-			if (!interactor) { return false; }
+		public void StopInteraction(Interactor interactor) {
+			if (!interactor) { return; }
+			ProjectUtils.SetGrabState(GrabState.None);
 			SetColliders(false);
 			interactor.holdpoint.connectedBody = null;
 			interactor.hitmark.gameObject.SetActive(false);
 			SnapPoint.CheckTriggeredPoints(this);
 			OnStopInteract?.Invoke();
 			OnInteractStop.Invoke();
-			return true;
-		}
-		public void StopInteraction(Interactor interactor) {
-			if (!StopCommon(interactor)) { return; }
+			switch (ProjectUtils.playState) {
+				case PlayerState.RotateObject:
+					ProjectUtils.RevertPlayState();
+					break;
+			}
 			rb.AddForce(Vector3.up);
 		}
 		public void SwitchInteraction(Interactor interactor) {
