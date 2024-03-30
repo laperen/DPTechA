@@ -22,11 +22,12 @@ namespace ShaunGoh {
 		public static float pickupRotateSpeed, pickupZoomScale;
 		public static float playerMovespeed;
 		public static float playerRunspeed;
-		public static string mouseSensitivityPrefKey = "MouseSensitivity";
+		public const string mouseSensitivityPrefKey = "MouseSensitivity";
 		public static float camTurnspeed;
 		public static event Action playStateChanged;
 		public static PlayerState playState { get; private set; }
 		public static GrabState grabState { get; private set; }
+		public static GrabState lastActiveGrabState { get; private set; }
 		private static PlayerMark player;
 
 		public static void HideCursor() {
@@ -50,6 +51,7 @@ namespace ShaunGoh {
 			playStateChanged?.Invoke();
 		}
 		public static void SetGrabState(GrabState state) {
+			if(state != GrabState.None) { lastActiveGrabState = state; }
 			grabState = state;
 			playStateChanged?.Invoke();
 		}
@@ -73,6 +75,6 @@ namespace ShaunGoh {
 		void StartInteraction(Interactor interactor);//on mouse click
 		void StopInteraction(Interactor interactor);//on mouse click while this object is in a running interaction
 		void ConstantInteraction(Interactor interactor);//on update, controls are placed within interactable
-		void FreezeInteraction(Interactor interactor);//on key F
+		void SwitchInteraction(Interactor interactor);//on key F
 	}
 }

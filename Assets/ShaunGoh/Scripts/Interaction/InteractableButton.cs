@@ -19,7 +19,7 @@ namespace ShaunGoh {
 			if (!interactor) { return; }
 			OnStopInteract?.Invoke();
 		}
-		public void FreezeInteraction(Interactor interactor) {
+		public void SwitchInteraction(Interactor interactor) {
 			if (!interactor) { return; }
 			OnStopInteract?.Invoke();
 		}

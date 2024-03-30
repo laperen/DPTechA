@@ -7,8 +7,8 @@ namespace ShaunGoh {
 		public int raydist;
 		private RaycastHit hit;
 
-		public Transform holdpoint;
-		public Transform hitmark;
+		public FixedJoint holdpoint;
+		public Transform grabPoint, hitmark;
 		private I_Interactable interactable;
 		private InteractableLink iLink;
 		private bool inInteraction;
@@ -29,8 +29,8 @@ namespace ShaunGoh {
 				}
 			}
 			if (inInteraction) {
-				if (Input.GetButtonDown("Freeze")) {
-					FreezeInteracted();
+				if (Input.GetButtonDown("Switch")) {
+					SwitchInteracted();
 				}
 				switch (ProjectUtils.playState) {
 					case PlayerState.Character:
@@ -56,7 +56,7 @@ namespace ShaunGoh {
 		}
 		private void DoInteraction() {
 			if (null == CastRay()) { return; }
-			holdpoint.localRotation = Quaternion.identity;
+			holdpoint.transform.localRotation = Quaternion.identity;
 			Transform directTarget = hit.collider.transform;
 			iLink = directTarget.GetComponent<InteractableLink>();
 			interactable = directTarget.GetComponent<I_Interactable>();
@@ -68,22 +68,20 @@ namespace ShaunGoh {
 				}
 			}
 			if (null == interactable) { return; }
-			interactable.StartInteraction(this);
 			switch (interactable.Itype) {
 				case InteractableType.Pickable:
-					ProjectUtils.SetGrabState(GrabState.Placement);
-					hitmark.gameObject.SetActive(true);
+					ProjectUtils.SetGrabState(ProjectUtils.lastActiveGrabState == GrabState.None ? GrabState.Placement : ProjectUtils.lastActiveGrabState);
 					inInteraction = true;
 					break;
 				default:
 					break;
 			}
+			interactable.StartInteraction(this);
 		}
 		private void CommonStopInteraction() {
 			switch (interactable.Itype) {
 				case InteractableType.Pickable:
 					ProjectUtils.SetGrabState(GrabState.None);
-					hitmark.gameObject.SetActive(false);
 					break;
 				default:
 					break;
@@ -101,10 +99,9 @@ namespace ShaunGoh {
 			interactable.StopInteraction(this);
 			CommonStopInteraction();
 		}
-		private void FreezeInteracted() {
+		private void SwitchInteracted() {
 			if (null == interactable) { return; }
-			interactable.FreezeInteraction(this);
-			CommonStopInteraction();
+			interactable.SwitchInteraction(this);
 		}
 	}
 }
